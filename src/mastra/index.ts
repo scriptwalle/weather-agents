@@ -6,6 +6,7 @@ import { Observability, DefaultExporter, CloudExporter, SensitiveDataFilter } fr
 import { weatherWorkflow } from './workflows/weather-workflow';
 import { weatherAgent } from './agents/weather-agent';
 import { toolCallAppropriatenessScorer, completenessScorer, translationScorer } from './scorers/weather-scorer';
+import { registerCopilotKit } from '@ag-ui/mastra/copilotkit'
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
@@ -34,4 +35,17 @@ export const mastra = new Mastra({
       },
     },
   }),
+  server: {
+    cors: {
+      origin: '*',
+      allowMethods: ['*'],
+      allowHeaders: ['*'],
+    },
+    apiRoutes: [
+      registerCopilotKit({
+        path: '/weather',
+        resourceId: 'weatherAgent',
+      })
+    ]
+  }
 });
